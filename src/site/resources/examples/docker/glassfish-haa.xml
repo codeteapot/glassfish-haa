@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<agent
+    xmlns="http://codeteapot.github.io/glassfish-haa"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://codeteapot.github.io/glassfish-haa ../../xml/ns/agent.xsd"
+    version="0.1">
+
+    <availability>
+
+        <cluster>
+            <administrationName>test</administrationName>
+            <executionGroups>
+                <group>test</group>
+            </executionGroups>
+            <domainName>example.net</domainName>
+            <clusterName>example</clusterName>
+        </cluster>
+
+    </availability>
+
+    <platform>
+
+        <listen>
+
+            <docker>
+                <group>haa-example</group>
+                <host>tcp://docker-sock:2375</host>
+                <roles>
+                    <role>
+                        <name>das</name>
+                        <profile>glassfish-server</profile>
+                    </role>
+                    <role>
+                        <name>nodes</name>
+                        <profile>glassfish-server</profile>
+                    </role>
+                </roles>
+            </docker>
+
+        </listen>
+
+        <catalog>
+
+            <profile>
+                <name>glassfish-server</name>
+                <network>docker_default</network>
+                <realm>
+                    <user>
+                        <name>glassfish</name>
+                        <identityOnly>pubkey-all</identityOnly>
+                    </user>
+                </realm>
+                <ready>
+                    <username>glassfish</username>
+                    <initialDelay>PT4S</initialDelay>
+                    <retryDelay>PT2S</retryDelay>
+                </ready>
+                <pool>
+                    <idleTimeout>PT10S</idleTimeout>
+                </pool>
+                <fetch>
+                    <username>glassfish</username>
+                    <file>/etc/glassfish-haa.xml</file>
+                </fetch>
+            </profile>
+
+        </catalog>
+
+        <authentication>
+
+            <identities>
+            
+                <identity>
+                    <name>pubkey-all</name>
+                    <export>ftp://agent:12345678@pubkey-repo/ssh.pub</export>
+                </identity>
+                
+            </identities>
+
+        </authentication>
+
+    </platform>
+
+</agent>

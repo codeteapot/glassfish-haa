@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns="http://codeteapot.github.io/glassfish-haa"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.w3.org/2001/XMLSchema https://www.w3.org/2001/XMLSchema.xsd"
+    targetNamespace="http://codeteapot.github.io/glassfish-haa"
+    elementFormDefault="qualified">
+
+    <xs:include schemaLocation="version.xsd"/>
+    
+    <xs:element name="machine">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="MachineType">
+                    <xs:attribute name="version" type="VersionType" use="required" fixed="0.1"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:complexType name="MachineType">
+        <xs:all>
+            <xs:element name="facets">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:choice maxOccurs="unbounded">
+                            <xs:element name="applicationServer">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="user" type="xs:string" minOccurs="0"/>
+                                        <xs:element name="administration" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="name" type="xs:string"/>
+                                                    <xs:element name="asAdminPath" type="xs:string"/>
+                                                    <xs:element name="publicKey" type="xs:string" minOccurs="0"/>
+                                                    <xs:element name="user" type="xs:string"/>
+                                                    <xs:element name="passwords" type="xs:string"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="execution" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="group" type="xs:string"/>
+                                                    <xs:element name="authorizedKeys" type="xs:string" minOccurs="0"/>
+                                                    <xs:element name="hostRetrieve" type="xs:string"/>
+                                                    <xs:element name="installDir" type="xs:string" minOccurs="0"/>
+                                                    <xs:element name="nodeDir" type="xs:string" minOccurs="0"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:choice>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:all>
+    </xs:complexType>
+    
+</xs:schema>

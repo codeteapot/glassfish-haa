@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns="http://codeteapot.github.io/glassfish-haa"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.w3.org/2001/XMLSchema https://www.w3.org/2001/XMLSchema.xsd"
+    targetNamespace="http://codeteapot.github.io/glassfish-haa"
+    elementFormDefault="qualified">
+
+    <xs:simpleType name="VersionType">
+        <xs:restriction base="xs:NMTOKEN"/>
+    </xs:simpleType>
+
+</xs:schema>

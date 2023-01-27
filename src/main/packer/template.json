@@ -1,0 +1,39 @@
+{
+  "variables": {
+    "dockerRepository": "repository",
+    "dockerTag": "tag",
+    "applicationLibDir": "/usr/local/lib/application"
+  },
+  "builders": [
+    {
+      "type": "docker",
+      "image": "openjdk:8",
+      "commit": true,
+      "changes": [
+        "USER agent",
+        "ENTRYPOINT /init"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "{{template_dir}}/setup.sh",
+      "environment_vars": [
+        "APPLICATION_LIB_DIR={{ user `applicationLibDir` }}"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "{{template_dir}}/files/lib/",
+      "destination": "{{ user `applicationLibDir` }}"
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "docker-tag",
+      "repository": "{{ user `dockerRepository` }}",
+      "tag": "{{ user `dockerTag` }}"
+    }
+  ]
+}

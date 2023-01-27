@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<machine
+    xmlns="http://codeteapot.github.io/glassfish-haa"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://codeteapot.github.io/glassfish-haa ../../../../../xml/ns/machine.xsd"
+    version="0.1">
+    
+    <!-- https://codeteapot.github.io/glasfish-haa/v0.1/xml/ns/machine.xsd -->
+    <!-- ../../../../../xml/ns/machine.xsd -->
+    
+    <facets>
+    
+        <applicationServer>
+            <user>glassfish</user>
+            <execution>
+                <group>test</group>
+                <authorizedKeys>/var/glassfish/.ssh/authorized_keys</authorizedKeys>
+                <hostRetrieve>hostname -I | awk '{print $1;}'</hostRetrieve>
+                <nodeDir>/var/glassfish/nodes</nodeDir>
+            </execution>
+        </applicationServer>
+        
+    </facets>
+    
+</machine>

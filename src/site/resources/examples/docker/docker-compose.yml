@@ -1,0 +1,105 @@
+version: "2.0"
+
+services:
+
+  glassfish-das:
+    image: examples/glassfish7
+    hostname: glassfish-das
+    labels:
+      com.github.codeteapot.glassfish.haa.group: haa-example
+      com.github.codeteapot.glassfish.haa.role: das
+    ports:
+      - "2201:22"
+      - "14848:4848"
+    environment:
+      - SSH_PUBLIC_KEYS=glassfish:/mnt/pubkey-repo/ssh.pub,glassfish:/mnt/ssh.pub
+    volumes:
+      - pubkey-repo:/mnt/pubkey-repo:ro
+      - $HOME/.ssh/id_rsa.pub:/mnt/ssh.pub:ro
+      - $PWD/containers/glassfish-das/mount/glassfish-haa.xml:/etc/glassfish-haa.xml:ro
+      - $PWD/containers/glassfish-das/mount/passwords.sh:/var/glassfish/passwords.sh:ro
+      - $PWD/containers/glassfish-das/provisioner:/tmp/provisioner.d/:ro
+      
+  glassfish-nodes-01:
+    image: examples/glassfish7
+    hostname: glassfish-nodes-01
+    labels:
+      com.github.codeteapot.glassfish.haa.group: haa-example
+      com.github.codeteapot.glassfish.haa.role: nodes
+    ports:
+      - "2202:22"
+    environment:
+      - SSH_PUBLIC_KEYS=glassfish:/mnt/pubkey-repo/ssh.pub,glassfish:/mnt/ssh.pub
+    volumes:
+      - pubkey-repo:/mnt/pubkey-repo:ro
+      - $HOME/.ssh/id_rsa.pub:/mnt/ssh.pub:ro
+      - $PWD/containers/glassfish-nodes/mount/glassfish-haa.xml:/etc/glassfish-haa.xml:ro
+      - $PWD/containers/glassfish-nodes/provisioner:/tmp/provisioner.d/:ro
+      
+  glassfish-nodes-02:
+    image: examples/glassfish7
+    hostname: glassfish-nodes-02
+    labels:
+      com.github.codeteapot.glassfish.haa.group: haa-example
+      com.github.codeteapot.glassfish.haa.role: nodes
+    ports:
+      - "2203:22"
+    environment:
+      - SSH_PUBLIC_KEYS=glassfish:/mnt/pubkey-repo/ssh.pub,glassfish:/mnt/ssh.pub
+    volumes:
+      - pubkey-repo:/mnt/pubkey-repo:ro
+      - $HOME/.ssh/id_rsa.pub:/mnt/ssh.pub:ro
+      - $PWD/containers/glassfish-nodes/mount/glassfish-haa.xml:/etc/glassfish-haa.xml:ro
+      - $PWD/containers/glassfish-nodes/provisioner:/tmp/provisioner.d/:ro
+      
+  glassfish-haa:
+    image: codeteapot/glassfish-haa:0.1.0
+    hostname: glassfish-haa
+    ports:
+      - "9999:9999"
+    environment:
+      - GLASSFISH_AGENT_CONFIG=/etc/glassfish-haa.xml
+    volumes:
+      - $PWD/glassfish-haa.xml:/etc/glassfish-haa.xml:ro
+      - $PWD/logging.properties:/var/agent/logging.properties:ro
+    depends_on:
+      - docker-sock
+      
+  farmer:
+    image: kroniak/ssh-client
+    hostname: farmer
+    entrypoint: /tmp/farmer.sh
+    volumes:
+      - $HOME/.ssh/id_rsa:/root/.ssh/id_rsa:ro
+      - $PWD/containers/farmer/mount/farmer.sh:/tmp/farmer.sh:ro
+      - $PWD/containers/farmer/mount/admin-setup.sh:/tmp/admin-setup.sh:ro
+    depends_on:
+      - glassfish-das
+      
+  pubkey-repo:
+    image: garethflowers/ftp-server
+    hostname: pubkey-repo
+    ports:
+      - "20-21:20-21/tcp"
+      - "40000-40009:40000-40009/tcp"
+    environment:
+      - FTP_USER=agent
+      - FTP_PASS=12345678
+    volumes:
+      - pubkey-repo:/home/agent:rw
+      
+  docker-sock:
+    image: tecnativa/docker-socket-proxy
+    hostname: docker-sock
+    privileged: true
+    environment:
+      - INFO=1
+      - EVENTS=1
+      - CONTAINERS=1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      
+volumes:
+
+  pubkey-repo:
+    external: false

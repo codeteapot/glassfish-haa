@@ -1,0 +1,11 @@
+version: "2.0"
+
+services:
+
+  pubkey-repo:
+    logging:
+      driver: none
+      
+  docker-sock:
+    logging:
+      driver: none

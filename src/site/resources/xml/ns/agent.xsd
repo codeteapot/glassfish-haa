@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns="http://codeteapot.github.io/glassfish-haa"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.w3.org/2001/XMLSchema https://www.w3.org/2001/XMLSchema.xsd"
+    targetNamespace="http://codeteapot.github.io/glassfish-haa"
+    elementFormDefault="qualified">
+    
+    <xs:include schemaLocation="version.xsd"/>
+    <xs:include schemaLocation="platform.xsd"/>
+    
+    <xs:element name="agent">
+        <xs:complexType>
+            <xs:sequence>
+            
+                <xs:element name="availability">
+                     <xs:complexType>
+                        <xs:sequence>
+                            <xs:sequence>
+                                <xs:element name="cluster" minOccurs="0" maxOccurs="unbounded">
+                                    <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element name="administrationName" type="xs:string"/>
+                                            <xs:element name="executionGroups">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name="group" type="xs:string"/>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                            <xs:element name="domainName" type="xs:string"/>
+                                            <xs:element name="clusterName" type="xs:string"/>
+                                        </xs:sequence>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                
+                <xs:element name="platform" type="PlatformType"/>
+                
+            </xs:sequence>
+            <xs:attribute name="version" type="VersionType" use="required" fixed="0.1"/>
+        </xs:complexType>
+    </xs:element>
+    
+</xs:schema>
